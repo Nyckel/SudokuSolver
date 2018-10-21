@@ -11,15 +11,17 @@ class Sudoku:
         print("Starting sudoku resolution")
 
 
-    def assignment_complet(self):
+    def assignment_complet(self, grid):
         for i in range (0,self.DIMENTION^2):
-            if (1 < self.initial_grid[i].possible_values):
+            if (1 < grid[i].possible_values):
                 return False
         return True
 
     def backtracking_search(self,assignment,csp):
-        if self.assignment_complet():
-            return 0
+        grid=self.initial_grid
+        if self.assignment_complet(grid):
+            return grid
+        
 
 
     def mrv(self):
