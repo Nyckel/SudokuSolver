@@ -1,25 +1,37 @@
 class Sudoku:
 
+
+
     def __init__(self, initial_grid):
         self.initial_grid = initial_grid #une grille de box
+        self.DIMENTION = 9
+
 
     def solve(self):
         print("Starting sudoku resolution")
 
 
+    def assignment_complet(self):
+        for i in range (0,self.DIMENTION^2):
+            if (1 < self.initial_grid[i].possible_values):
+                return False
+        return True
+
     def backtracking_search(self,assignment,csp):
-      return 0
+        if self.assignment_complet():
+            return 0
 
 
     def mrv(self):
         nb_val = 10
-        for i in range (0,81):
+        for i in range (0,self.DIMENTION^2):
             nb_val_box = len(self.initial_grid[i].possible_values)
-            if (nb_val_box < nb_val):
+            if (1 < nb_val_box < nb_val):
                 nb_val = nb_val_box
                 var=self.initial_grid[i]
-            elif (nb_val_box < nb_val):
+            elif (nb_val_box == nb_val):
                self.degree_heuristic()
+        return var
 
 
 
