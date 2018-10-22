@@ -107,9 +107,9 @@ class Sudoku:
     @staticmethod
     def is_value_consistent_with_asignment(self, val, assignment, node):#,csp
         for i in range (0,len(assignment.size())):
-            pos_ass=assignment[i].get_position()
-            pos=node.get_position()
-            if self.conflict_able(pos_ass,pos):
+            box_ass=assignment[i]#.get_position()
+            #pos=node.get_position()
+            if node.get_constraint_nodes().contain(box_ass):#self.conflict_able(pos_ass,pos)
                 if(val==assignment[i].get_value()):
                     return False
         return True
