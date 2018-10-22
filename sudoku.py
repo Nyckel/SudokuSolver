@@ -93,7 +93,9 @@ class Sudoku:
         return [key for key, val in sorted_list]
 
     @staticmethod
+
     def conflict_able(self, pos1, pos2):
+        """return true if 2 boxs are in the same line, colone or case"""
         if (pos1 % 9 == pos2 % 9):
             return True
         if (pos1 // 9 == pos2 // 9):
