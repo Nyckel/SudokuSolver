@@ -17,7 +17,7 @@ class Parser:
             else :
                 i.is_original = True
 
-    def initContraintesLignes(self, sudoku, box):
+    def initConstraintLines(self, sudoku, box):
         if box.possible_values.size() != 1 :
             return 0;
         else :
@@ -28,7 +28,7 @@ class Parser:
 
         return 0;
 
-    def initContraintesColonnes(self, sudoku, box):
+    def initConstraintColumns(self, sudoku, box):
         if box.possible_values.size() != 1:
             return 0;
         else:
@@ -38,7 +38,7 @@ class Parser:
                     box.possible_values.remove(i.possible_values - 1)
         return 0;
 
-    def initContraintesCarre(self, sudoku, box):
+    def initConstraintSquare(self, sudoku, box):
         if box.possible_values.size() != 1:
             return 0;
         else:
