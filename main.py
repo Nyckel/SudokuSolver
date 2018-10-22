@@ -6,7 +6,7 @@
 """
 import argparse
 
-from parser import Parser
+from parseur import Parser
 from sudoku import Sudoku
 
 

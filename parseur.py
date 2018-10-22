@@ -1,4 +1,6 @@
+from sudoku import Sudoku
 class Parser:
+
     def __init__(self):
       self.path
 
@@ -8,6 +10,12 @@ class Parser:
         text = file.read().rstrip()
 
     def parse(self):
+        sudoku = Sudoku()
+        with open(self.path) as f:
+            for line in f:
+                for i in line:
+                    if i != 0:
+                        sudoku.initial_grid = i
         return 0;
 
     def isInitil(self,sudoku):

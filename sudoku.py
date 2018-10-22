@@ -8,6 +8,10 @@ class Sudoku:
         self.initial_grid = initial_grid #une grille de box
         self.DIMENTION = 9
 
+    def __init__(self):
+        self.initial_grid #une grille de box
+        self.DIMENTION = 9
+
     def solve(self):
         print("Starting sudoku resolution")
         if self.backtracking_search(deepcopy(self.initial_grid)):
