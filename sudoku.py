@@ -19,7 +19,7 @@ class Sudoku:
             return assignment
         node = self.select_unasigned_variable(csp)
         for val in self.order_domain_values(node, assignment, csp):
-            if self.is_value_consistent_with_asignment(val, assignment):
+            if self.is_value_consistent_with_asignment(val, assignment ,node):
                 node.set_value(val)
                 csp.remove(node)
                 assignment.append(node)
@@ -82,13 +82,26 @@ class Sudoku:
         return [key for key, val in sorted_list]
 
     @staticmethod
-
-    def is_value_consistent_with_asignment(node, assignment, csp):
-        node_poss=csp.get_possible_values()
-        for i in range (0,len(node_poss.size())):
-            if (node_poss[i] == node):
-                return True
+    def conflict_able(self, pos1, pos2):
+        if (pos1 % 9 == pos2 % 9):
+            return True
+        if (pos1 // 9 == pos2 // 9):
+            return True
+        if ((pos1 // 9 // 3 == pos2 // 9 // 3) & (pos1 % 9 // 3 == pos1 % 9 // 3)):
+            return True
         return False
+
+    @staticmethod
+    def is_value_consistent_with_asignment(self, val, assignment, node):#,csp
+        for i in range (0,len(assignment.size())):
+            pos_ass=assignment[i].get_position()
+            pos=node.get_position()
+            if self.conflict_able(pos_ass,pos):
+                if(val==assignment[i].get_value()):
+                    return False
+        return True
+
+
 
     def ac3(self, csp):
         """ Arc Consistency 3 Algorithm,
