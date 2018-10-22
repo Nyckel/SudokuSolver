@@ -33,15 +33,16 @@ class Sudoku:
 
     def select_unasigned_variable(self, csp):
         min_nodes = self.mrv(csp)
-        min_nodes = self.degree_heuristic(min_nodes)
-        if len(min_nodes) > 0:
+        if len(min_nodes) == 1:
             return min_nodes[0]
+        elif len(min_nodes) > 1:
+            return self.degree_heuristic(min_nodes)
         else:
             raise Exception("No node selected after MRV ans Degree heuristic")
 
     @staticmethod
     def mrv(node_list):
-        """ Use Minimum Remaining Values """
+        """ Minimum Remaining Values """
         min_val = 10
         min_nodes = list()
         for node in node_list:
@@ -53,12 +54,32 @@ class Sudoku:
         return min_nodes
 
     @staticmethod
-    def degree_heuristic(self, node_list):
-        return node_list  # TODO
+    def degree_heuristic(node_list):
+        if len(node_list) == 1:
+            return node_list
+        min_val = 21  # Number of constraints for any nodes + 1
+        min_node = None
+        for node in node_list:
+            nb_constraints = sum([1 if n.is_assigned() else 0 for n in node.get_constraint_nodes()])
+            if nb_constraints < min_val:
+                min_val = nb_constraints
+                min_node = node
+        return min_node
 
     @staticmethod
     def order_domain_values(node, assignment, csp):
-        return node.get_possible_values()[0]  # TODO
+        """ Least constraining value
+            Here the least constraining value is the one that is least present in the constraint nodes possible values
+        """
+        # TODO: Check if it's possible to do this step only once and have the values ordered on the Box object
+        vals = dict()
+        for val in node.get_possible_values():
+            if val in vals:
+                vals[val] += 1
+            else:
+                vals[val] = 1
+        sorted_list = sorted(vals.items(), key=lambda kv: kv[1])
+        return [key for key, val in sorted_list]
 
     @staticmethod
 
@@ -75,7 +96,7 @@ class Sudoku:
         q = Queue()
 
         for nodea in csp:  # Initially add all arcs in the queue
-            for nodeb in nodea.constraints:
+            for nodeb in nodea.get_constraint_nodes():
                 if (nodea, nodeb) not in q and (nodeb, nodea) not in q:
                     q.put_nowait((nodea, nodeb))
 
