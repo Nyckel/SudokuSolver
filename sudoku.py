@@ -61,8 +61,12 @@ class Sudoku:
         return node.get_possible_values()[0]  # TODO
 
     @staticmethod
+
     def is_value_consistent_with_asignment(node, assignment, csp):
-        # TODO
+        node_poss=csp.get_possible_values()
+        for i in range (0,len(node_poss.size())):
+            if (node_poss[i] == node):
+                return True
         return False
 
     def ac3(self, csp):
