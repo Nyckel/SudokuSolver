@@ -33,6 +33,3 @@ class Box:
     def get_isOriginal(self):
         return self.is_original
 
-    def get_constraint_nodes(self):
-        return self.box_in_conflict
-
