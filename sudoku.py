@@ -5,19 +5,21 @@ from copy import deepcopy
 class Sudoku:
 
     def __init__(self, initial_grid):
-        self.initial_grid = initial_grid #une grille de box
+        self.initial_grid = initial_grid  # une grille de box
         self.DIMENTION = 9
 
     def __init__(self):
-        self.initial_grid #une grille de box
+        self.initial_grid = []  # une grille de box
         self.DIMENTION = 9
 
     def solve(self):
         print("Starting sudoku resolution")
-        if self.backtracking_search(deepcopy(self.initial_grid)):
+        res = self.backtracking_search(deepcopy(self.initial_grid))
+        if res:
             print("Sudoku solved !")
         else:
             print("Sudoku could not be solved")
+        return res
 
     def backtracking_search(self, csp):
         """ Backtracking is equivalent to DFS with a variable per node """
@@ -82,14 +84,16 @@ class Sudoku:
         """ Least constraining value
             Here the least constraining value is the one that is least present in the constraint nodes possible values
         """
-        # TODO: Check if it's possible to do this step only once and have the values ordered on the Box object
         vals = dict()
         for val in node.get_possible_values():
-            if val in vals:
-                vals[val] += 1
-            else:
-                vals[val] = 1
+            vals[val] = 1
+        for n in node.get_constraint_nodes():
+            for val in n.get_possible_values():
+                if val in vals:
+                    vals[val] += 1
+
         sorted_list = sorted(vals.items(), key=lambda kv: kv[1])
+        print("sorted:", sorted_list)
         return [key for key, val in sorted_list]
 
     @staticmethod
@@ -104,9 +108,8 @@ class Sudoku:
             return True
         return False
 
-    @staticmethod
     def is_value_consistent_with_asignment(self, val, assignment, node):#,csp
-        for i in range (0,len(assignment.size())):
+        for i in range (0,len(assignment)):
             pos_ass=assignment[i].get_position()
             pos=node.get_position()
             if self.conflict_able(pos_ass,pos):
@@ -145,6 +148,8 @@ class Sudoku:
                 removed = True
         return removed
 
+    def get_initial_grid(self):
+        return self.initial_grid
 
     def assignment_complet(self, grid):
         for i in range (0,self.DIMENTION^2):

@@ -6,6 +6,7 @@
 """
 import argparse
 
+from display import Display
 from parseur import Parser
 from sudoku import Sudoku
 
@@ -16,9 +17,9 @@ class Main:
         parser.add_argument("-f", "--file", help="Path to the file containing the sudoku", required=True)
 
         args = parser.parse_args()
-        file = open(args.file, 'r')
-        sudoku = Sudoku(Parser.parse(file))
-        sudoku.solve()
+        sudoku = Sudoku(Parser.parse(args.file))
+
+        window = Display(sudoku)
 
 
 if __name__ == '__main__':
