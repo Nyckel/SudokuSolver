@@ -1,12 +1,22 @@
 
 class Box:
 
-    def __init__(self, initial_grid,pos,original, box_conflit):
-        self.is_original = original
-        self.possible_values = {1,2,3,4,5,6,7,8,9}
-        self.position = pos
-        self.box_in_conflict = box_conflit
 
+    def __init__(self, position, start_value: int):
+        self.constraints = []
+        self.position = position
+        if start_value != 0:
+            self.original = True
+            self.possible_values = [start_value]
+        else:
+            self.original = False
+            self.possible_values = list(range(1, 10))
+
+    def is_original(self):
+        return self.original
+
+    def get_constraint_nodes(self):
+        return self.constraints
 
     def get_position(self):
         return self.position
@@ -25,3 +35,4 @@ class Box:
 
     def get_constraint_nodes(self):
         return self.box_in_conflict
+

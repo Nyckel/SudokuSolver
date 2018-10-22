@@ -1,4 +1,6 @@
 from sudoku import Sudoku
+
+
 class Parser:
 
     def __init__(self):
