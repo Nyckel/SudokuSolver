@@ -1,4 +1,5 @@
 from queue import Queue
+from copy import deepcopy
 
 
 class Sudoku:
@@ -7,16 +8,26 @@ class Sudoku:
         self.initial_grid = initial_grid #une grille de box
         self.DIMENTION = 9
 
+    def __init__(self):
+        self.initial_grid #une grille de box
+        self.DIMENTION = 9
+
     def solve(self):
         print("Starting sudoku resolution")
+        if self.backtracking_search(deepcopy(self.initial_grid)):
+            print("Sudoku solved !")
+        else:
+            print("Sudoku could not be solved")
 
     def backtracking_search(self, csp):
         """ Backtracking is equivalent to DFS with a variable per node """
-        return self.recursive_backtracking((), csp)
+        return self.recursive_backtracking(list(), csp)
 
     def recursive_backtracking(self, assignment, csp):
+        print(type(assignment))
         if len(assignment) == len(self.initial_grid):  # Assignment is complete
             return assignment
+        self.ac3(csp)
         node = self.select_unasigned_variable(csp)
         for val in self.order_domain_values(node, assignment, csp):
             if self.is_value_consistent_with_asignment(val, assignment ,node):
@@ -116,7 +127,7 @@ class Sudoku:
         while not q.empty():
             nodea, nodeb = q.get_nowait()
             if self.remove_inconsistent_values(nodea, nodeb):
-                if nodea.get_possible_values().size() == 0:
+                if len(nodea.get_possible_values()) == 0:
                     return False
                 for nodec in nodea.get_constraint_nodes().remove(nodeb):
                     q.put_nowait((nodec, nodea))
