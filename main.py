@@ -13,11 +13,13 @@ from sudoku import Sudoku
 
 class Main:
     def __init__(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument("-f", "--file", help="Path to the file containing the sudoku", required=True)
-
-        args = parser.parse_args()
-        sudoku = Sudoku(Parser.parse(args.file))
+        self.path = 'C:/Users/camil/Documents/Polytech/UQAC/trimestre 1/IA/TP2'
+        #parser = argparse.ArgumentParser()
+        #parser.add_argument("-f", "--file", help="Path to the file containing the sudoku", required=True)
+        #args = parser.parse_args()
+        Sudoku.sudoku = Sudoku()
+        sudoku = Parser.parse(self)
+        sudoku = Parser.Constraints(self, sudoku)
 
         window = Display(sudoku)
 

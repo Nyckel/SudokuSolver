@@ -10,27 +10,29 @@ class Parser:
         self.lines = [1,2,3,4,5,6,7,8,9]
         self.case = [0,1,2,9,10,11,18,19,20]
     @staticmethod
-    def parse(file):
-        print("Parsing...")
-        text = file.read().rstrip()
+    #def parse(file):
+     #   print("Parsing...")
+     #   text = file.read().rstrip()
 
     def parse(self):
         sudoku = Sudoku()
         j = 1
-        with open(self.path) as f:
-            for line in f:
-                for i in line:
-                    if i != 0:
-                        Box.newbox = Box(j,1)
-                        Box.newbox.possible_values = i
-                        sudoku.initial_grid.add(Box.newbox)
-                        j = j+1
-                    if i == 0:
-                        Box.newbox = Box(j, 0)
-                        Box.newbox.possible_values = [1,2,3,4,5,6,7,8,9]
-                        sudoku.initial_grid.add(Box.newbox)
-                        j = j + 1
-        return 0;
+        file = open(self.path,"r")
+        for line in file:
+            for i in line:
+                i = int(i)
+                if i != 0:
+                    Box.newbox = Box(j,1)
+                    Box.newbox.possible_values = i
+                    sudoku.initial_grid.add(Box.newbox)
+                    j = j + 1
+                if i == 0:
+                    Box.newbox = Box(j, 0)
+                    Box.newbox.possible_values = [1,2,3,4,5,6,7,8,9]
+                    sudoku.initial_grid.add(Box.newbox)
+                    j = j + 1
+        file.close()
+        return sudoku;
 
     def isInitil(self,sudoku):
         for i in sudoku :
@@ -77,3 +79,10 @@ class Parser:
                 if sudoku(i).possible_values.size() == 1:
                     box.possible_values.remove(i.possible_values - 1)
         return 0;
+
+    def Constraints(self, sudoku):
+        for box in sudoku:
+            self.initConstraintLines(self,sudoku,box)
+            self.initConstraintColumns(self,sudoku,box)
+            self.initConstraintSquare(self,sudoku,box)
+        return sudoku;
