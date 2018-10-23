@@ -39,7 +39,7 @@ class Parser:
             j = ((box.position - j) / 9) + 1
             ligne = self.lines*j
             for i in ligne :
-                if i.possible_values.size() == 1 :
+                if sudoku(i).possible_values.size() == 1 :
                     box.possible_values.remove(i.possible_values - 1)
 
         return 0;
@@ -54,7 +54,7 @@ class Parser:
             j = (box.position - j)
             colonne = self.columns+9*j
             for i in colonne:
-                if i.possible_values.size() == 1:
+                if sudoku(i).possible_values.size() == 1:
                     box.possible_values.remove(i.possible_values - 1)
         return 0;
 
@@ -64,6 +64,6 @@ class Parser:
         else:
             carre = self.case + box.position
             for i in carre:
-                if i.possible_values.size() == 1:
+                if sudoku(i).possible_values.size() == 1:
                     box.possible_values.remove(i.possible_values - 1)
         return 0;
