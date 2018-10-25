@@ -1,15 +1,11 @@
-from queue import Queue
 from copy import deepcopy
+from box import Box
 
 
 class Sudoku:
 
     def __init__(self, initial_grid):
         self.initial_grid = initial_grid  # une grille de box
-        self.DIMENTION = 9
-
-    def __init__(self):
-        self.initial_grid = []  # une grille de box
         self.DIMENTION = 9
 
     def solve(self):
@@ -26,13 +22,12 @@ class Sudoku:
         return self.recursive_backtracking(list(), csp)
 
     def recursive_backtracking(self, assignment, csp):
-        print(type(assignment))
         if len(assignment) == len(self.initial_grid):  # Assignment is complete
             return assignment
         self.ac3(csp)
         node = self.select_unasigned_variable(csp)
-        for val in self.order_domain_values(node, assignment, csp):
-            if self.is_value_consistent_with_asignment(val, assignment ,node):
+        for val in self.order_domain_values(node):
+            if Sudoku.is_value_consistent_with_asignment(val, node):
                 node.set_value(val)
                 csp.remove(node)
                 assignment.append(node)
@@ -80,7 +75,7 @@ class Sudoku:
         return min_node
 
     @staticmethod
-    def order_domain_values(node, assignment, csp):
+    def order_domain_values(node):
         """ Least constraining value
             Here the least constraining value is the one that is least present in the constraint nodes possible values
         """
@@ -93,49 +88,37 @@ class Sudoku:
                     vals[val] += 1
 
         sorted_list = sorted(vals.items(), key=lambda kv: kv[1])
-        print("sorted:", sorted_list)
+        # print("sorted:", sorted_list)
         return [key for key, val in sorted_list]
 
     @staticmethod
-
-    def conflict_able(self, pos1, pos2):
-        """return true if 2 boxs are in the same line, colone or case"""
-        if (pos1 % 9 == pos2 % 9):
-            return True
-        if (pos1 // 9 == pos2 // 9):
-            return True
-        if ((pos1 // 9 // 3 == pos2 // 9 // 3) & (pos1 % 9 // 3 == pos1 % 9 // 3)):
-            return True
-        return False
-
-    def is_value_consistent_with_asignment(self, val, assignment, node):#,csp
-        for i in range (0,len(assignment.size())):
-            box_ass=assignment[i]#.get_position()
-            #pos=node.get_position()
-            if node.get_constraint_nodes().contain(box_ass):#self.conflict_able(pos_ass,pos)
-                if(val==assignment[i].get_value()):
-                    return False
+    def is_value_consistent_with_asignment(val: int, node: Box):
+        """ Check that none of the boxes constrained to the box already have this value  """
+        for n in node.get_constraint_nodes():
+            nval = n.get_possible_values()
+            if len(nval) == 1 and nval[0] == val:
+                return False
         return True
-
-
 
     def ac3(self, csp):
         """ Arc Consistency 3 Algorithm,
             Possibly reduces CSP domains """
-        q = Queue()
+        q = []
 
         for nodea in csp:  # Initially add all arcs in the queue
             for nodeb in nodea.get_constraint_nodes():
-                if (nodea, nodeb) not in q and (nodeb, nodea) not in q:
-                    q.put_nowait((nodea, nodeb))
+                # if (nodea, nodeb) not in q and (nodeb, nodea) not in q:
+                if (nodea, nodeb) not in q:
+                    q.append((nodea, nodeb))
 
-        while not q.empty():
-            nodea, nodeb = q.get_nowait()
+        while not len(q) == 0:
+            nodea, nodeb = q.pop()
             if self.remove_inconsistent_values(nodea, nodeb):
                 if len(nodea.get_possible_values()) == 0:
                     return False
-                for nodec in nodea.get_constraint_nodes().remove(nodeb):
-                    q.put_nowait((nodec, nodea))
+                for nodec in nodea.get_constraint_nodes():
+                    if nodec != nodeb:
+                        q.append((nodec, nodea))
         return True
 
     @staticmethod

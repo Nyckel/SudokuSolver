@@ -45,7 +45,7 @@ class Display:
             self.canvas.create_line(i*3*self.CELL_SIZE, 0, i*3*self.CELL_SIZE, 9*self.CELL_SIZE, width="2")
             self.canvas.create_line(0, i * 3 * self.CELL_SIZE, 9 * self.CELL_SIZE, i * 3 * self.CELL_SIZE, width="2")
 
-        if not len(cell.get_possible_values()) == 1:
+        if cell.get_value() is None:
             return  # We only write a number when we are sure of the cell's value
 
         if cell.is_original():
