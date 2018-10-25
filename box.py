@@ -17,6 +17,7 @@ class Box:
         return self.original
 
     def add_constraint(self, node):
+        """ Checks that we don't add a constraint to ourself, avoid duppicates by using a set data structure """
         if node.get_position() != self.get_position():
             self.constraints.add(node)
 

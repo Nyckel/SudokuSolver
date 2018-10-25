@@ -6,7 +6,6 @@ class Sudoku:
 
     def __init__(self, initial_grid):
         self.initial_grid = initial_grid  # une grille de box
-        self.DIMENTION = 9
 
     def solve(self):
         print("Starting sudoku resolution")
@@ -22,16 +21,18 @@ class Sudoku:
         return self.recursive_backtracking(list(), csp)
 
     def recursive_backtracking(self, assignment, csp):
+        print('.')
         if len(assignment) == len(self.initial_grid):  # Assignment is complete
             return assignment
-        self.ac3(csp)
+        if not self.ac3(csp):
+            return False
         node = self.select_unasigned_variable(csp)
         for val in self.order_domain_values(node):
             if Sudoku.is_value_consistent_with_asignment(val, node):
                 node.set_value(val)
                 csp.remove(node)
                 assignment.append(node)
-                result = self.recursive_backtracking(assignment, csp)
+                result = self.recursive_backtracking(deepcopy(assignment), deepcopy(csp))
                 if result:
                     return result
                 node.set_value(None)
@@ -95,9 +96,9 @@ class Sudoku:
     def is_value_consistent_with_asignment(val: int, node: Box):
         """ Check that none of the boxes constrained to the box already have this value  """
         for n in node.get_constraint_nodes():
-            nval = n.get_possible_values()
-            if len(nval) == 1 and nval[0] == val:
-                return False
+            nval = n.get_value()
+            if nval is not None and nval == val:
+                    return False
         return True
 
     def ac3(self, csp):
@@ -124,18 +125,11 @@ class Sudoku:
     @staticmethod
     def remove_inconsistent_values(nodea, nodeb):
         """ Returns true if some inconsistent values were found and removed """
-        removed = False
-        for val in nodea.get_possible_values():
-            if not nodeb.can_have_constraint_with_val(val):
-                nodea.remove_possible_value(val)
-                removed = True
-        return removed
+        if nodeb.get_value() is not None and nodeb.get_value() in nodea.get_possible_values():
+            nodea.remove_possible_value(nodeb.get_value())
+            return True
+        else:
+            return False
 
     def get_initial_grid(self):
         return self.initial_grid
-
-    def assignment_complet(self, grid):
-        for i in range (0,self.DIMENTION^2):
-            if (1 < grid[i].possible_values):
-                return False
-        return True
