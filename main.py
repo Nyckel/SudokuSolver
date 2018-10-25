@@ -5,6 +5,7 @@
 
 """
 import argparse
+from os import *
 
 from display import Display
 from parseur import Parser
@@ -20,8 +21,15 @@ class Main:
         if args.file is not None:
             sudoku = Sudoku(Parser.parse(args.file))
         else:
-            sudoku = Sudoku(Parser.parse("exemples/easy_1.txt"))
-        window = Display(sudoku)
+            print("Using default sudoku file")
+            sudoku = Sudoku(Parser.parse(Main.resource_path("exemples/easy_1.txt")))
+        Display(sudoku)
+
+    @staticmethod
+    def resource_path(relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(base_path, relative_path)
 
 
 if __name__ == '__main__':
